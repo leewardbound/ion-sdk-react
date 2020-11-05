@@ -1,0 +1,5 @@
+# IDE temp files
+.idea
+.vscode
+
+package-lock.json
