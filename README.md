@@ -11,7 +11,7 @@ Use at your own risk.
   
 ### Reusable Ion Components `src/components/`
 
-+ `<IonProvider room='test room' address='wss://ion-sfu:7000/ws'>`: Wrap your components in an IonProvider to enable `useIon()` hook
++ `<IonProvider>`: Wrap your components in an IonProvider to enable `useIon()` hook
 + `<BroadcastProvider audio video simulcast constraints={...} options={{codec: 'vp8'}}>`: Wrap your components in a BroadcastProvider to enable the `useBroadcast()` hook to get the local stream
 + `<VideoView stream={stream}>`: Helper for rendering streams; *TODO* add debug latency / codec / quality overlay
 + `<BroadcastPreview />`: Quickly render your own broadcast stream
@@ -21,3 +21,4 @@ Use at your own risk.
 ### Running Storybooks
 
 Just `yarn storybook` and you're off to the races! Ensure you have `ion-sfu:jsonrpc` listening on port `:7000` (or plug in your own signalling)
+
