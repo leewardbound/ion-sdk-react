@@ -1,6 +1,6 @@
 import React from "react";
 import {LocalStream} from 'ion-sdk-js'
-import { BroadcastContext, useBroadcast } from "../../contexts";
+import { BroadcastContext } from "../../contexts";
 
 export default function BroadcastProvider({children, stream, audio, video, simulcast, options}) {
     const [constraints, setContstraints] = React.useState({audio, video, simulcast})

@@ -2,7 +2,7 @@ import React from 'react'
 import {useBroadcast} from '../../contexts/Broadcast'
 import VideoView from '../VideoView'
 
-export default function BroadcastPreview(props) {
+export function BroadcastPreview(props) {
     const {localStream, getUserMedia} = useBroadcast();
 
     React.useEffect(
@@ -16,3 +16,5 @@ export default function BroadcastPreview(props) {
     else
         return <>Requesting video...</>
 }
+
+export default BroadcastPreview;
