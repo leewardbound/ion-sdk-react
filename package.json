@@ -33,10 +33,10 @@
     "@babel/preset-env": "^7.2.3",
     "@babel/preset-react": "^7.0.0",
     "@material-ui/core": "^4.11.0",
-    "@storybook/addon-actions": "^6.0.28",
-    "@storybook/addon-essentials": "^6.0.28",
-    "@storybook/addon-links": "^6.0.28",
-    "@storybook/react": "^6.0.28",
+    "@storybook/addon-actions": "^6.1.1",
+    "@storybook/addon-essentials": "^6.1.1",
+    "@storybook/addon-links": "^6.1.1",
+    "@storybook/react": "^6.1.1",
     "babel-loader": "^8.0.5",
     "prettier": "^2.1.2",
     "react-is": "^17.0.1",
@@ -44,7 +44,7 @@
     "webpack-cli": "^3.2.0"
   },
   "dependencies": {
-    "ion-sdk-js": "^1.0.20",
+    "ion-sdk-js": "^1.4.6",
     "prop-types": "latest",
     "react": "^16.7.0",
     "react-dom": "^16.7.0"

@@ -1,15 +1,14 @@
 import React from 'react';
 
-import {BroadcastProvider, BroadcastPreview} from '../components';
+import {BroadcastPreview} from '../components';
+import IonUserMediaProvider from "../components/IonUserMediaProvider";
 
 export default {
   title: 'BroadcastPreview',
   component: BroadcastPreview,
 };
 
-const Template = (args) => <BroadcastProvider debug>
-  <BroadcastPreview width={400} {...args} />
-</BroadcastProvider>;
+const Template = (args) => <IonUserMediaProvider><BroadcastPreview width={400} {...args} /></IonUserMediaProvider>
 
 export const Preview = Template.bind({});
 Preview.args = {

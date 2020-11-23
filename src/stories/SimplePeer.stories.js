@@ -18,14 +18,14 @@ const PeerTemplate = ({ count, ...args }) => {
   const [peerStreams, setPeerStreams] = React.useState({})
   const num = count === null ? 1 : count
   return (
-    <Grid container>
+    <Grid container spacing={4}>
       <Grid item xs={12}>
         <h4>Room: {room}</h4>
       </Grid>
       {Array(num).fill(num).map((n, idx) => (
-        <Grid item md={6} key={idx}>
-        <StoryProvider room={room}>
-          <SimplePeer {...args} peerStreams={peerStreams} setPeerStreams={setPeerStreams} />
+        <Grid item sm={6} md={4} lg={3} key={idx}>
+        <StoryProvider>
+          <SimplePeer {...args} room={room} peerStreams={peerStreams} setPeerStreams={setPeerStreams} />
         </StoryProvider>
         </Grid>
       ))}
@@ -37,4 +37,4 @@ export const OnePeer = PeerTemplate.bind({});
 OnePeer.args = { debug: true };
 
 export const BuddyTest = PeerTemplate.bind({});
-BuddyTest.args = { debug: true, count: 2 };
+BuddyTest.args = { debug: true, count: 4 };

@@ -1,3 +1,3 @@
 export * from './Ion';
 
-export * from './Broadcast';
+export * from './IonUserMedia';
