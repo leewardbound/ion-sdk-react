@@ -98,7 +98,9 @@ const ShowTrack = ({stream, name, debug}) => {
             <h6>
                 {name} {debug ? `- Stream ${stream.id}` : null}
             </h6>
-            <VideoView stream={stream} width={300}/>
+            <div style={{height: 90, width: 160, position: 'relative'}}>
+            <VideoView stream={stream} />
+            </div>
         </>
     );
 };
