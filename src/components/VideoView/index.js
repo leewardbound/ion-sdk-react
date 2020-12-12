@@ -14,6 +14,16 @@ export default function VideoView({ stream, ...props }) {
   function onCanPlay() {
     videoRef.current.play();
   }
+  const style = {
+    ...props.style,
+    height: '100%',
+    width: '100%',
+    overflow: 'hidden',
+    position: 'absolute',
+    objectFit: 'cover',
+    bottom: '0',
+    right: '0',
+  }
 
   return (
     <video
@@ -22,6 +32,7 @@ export default function VideoView({ stream, ...props }) {
       autoPlay
       playsInline
       {...props}
+      style={style}
     />
   );
 }

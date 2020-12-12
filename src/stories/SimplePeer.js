@@ -58,10 +58,11 @@ export default function SimplePeer({
             <div style={{
                 display: 'inline-block',
                 float: 'right',
+                position: 'relative',
                 width: '160px',
                 height: '90px'
             }}>
-                <BroadcastPreview height="90px" width="160px"/>
+                <BroadcastPreview />
             </div>
             <CardHeader
                 title={name}
@@ -71,7 +72,7 @@ export default function SimplePeer({
                         : null
                 }
             />
-            <Button onClick={doPublish}>Publish Webcam</Button>
+            <Button color="primary" onClick={doPublish}>Publish Webcam</Button>
             {streamIds.length || "No"} remote streams
             {streamIds.length ? <hr /> : null}
             {streamIds.map((id) => {

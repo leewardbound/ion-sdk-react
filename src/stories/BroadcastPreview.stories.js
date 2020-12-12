@@ -8,7 +8,7 @@ export default {
   component: BroadcastPreview,
 };
 
-const Template = (args) => <IonUserMediaProvider><BroadcastPreview width={400} {...args} /></IonUserMediaProvider>
+const Template = (args) => <IonUserMediaProvider><div style={{height: 90, width: 160, position: "relative"}}><BroadcastPreview {...args} /></div></IonUserMediaProvider>
 
 export const Preview = Template.bind({});
 Preview.args = {

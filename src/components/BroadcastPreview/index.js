@@ -12,7 +12,7 @@ export function BroadcastPreview(props) {
         }, [localStream, constraints]
     )
     if(localStream)
-        return <VideoView stream={localStream} {...props} />
+        return <VideoView stream={localStream} muted {...props} />
     else
         return <>Requesting video...</>
 }
