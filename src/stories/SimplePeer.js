@@ -68,7 +68,9 @@ export default function SimplePeer({
                 title={name}
                 subheader={
                     debug
-                        ? `${peerState} (${ion.ready ? 'ready' : ion.publisherSignalingState})`
+                        ? <>
+                        {peerState} ({ion.ready ? 'ready' : 'not ready'} - pub: {ion.publisherSignalingState} sub: {ion.subscriberSignalingState})
+                        </>
                         : null
                 }
             />
