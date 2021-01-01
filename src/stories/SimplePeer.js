@@ -29,16 +29,16 @@ export default function SimplePeer({
     React.useEffect(
         function SetupPeer() {
             if (
-                ion && !ion.client
+                ion && !ion.sid && ion.client
             ) {
-                console.log("SetupPeer");
+                console.log("SetupPeer", name, room);
                 const onTrack = (track, stream) => {
                     console.log("Got track", track, stream, track.id);
                     setTracks((previous) => ({...previous, [track.id]: track}));
                     setTrackStreams((previous) => ({...previous, [track.id]: stream}));
                     setRemoteStreams((previous) => ({...previous, [stream.id]: stream}));
                 };
-                ion.join({room, address, signal, onTrack})
+                ion.join(room, onTrack)
             }
         },
         [ion]
@@ -51,7 +51,13 @@ export default function SimplePeer({
         setPeerStreams(ps => ({...ps, [stream.id]: name}))
         setPeerState("webcam published!")
     }
+
     const streamIds = Object.keys(remoteStreams)
+
+    const statusInfo = <>
+        {peerState} ({ion.status?.ready ? 'ready' : 'not ready'} -
+        pub: {ion.status?.publisherSignalingState} sub: {ion.status?.subscriberSignalingState})
+    </>
 
     return (
         <Card>
@@ -62,21 +68,19 @@ export default function SimplePeer({
                 width: '160px',
                 height: '90px'
             }}>
-                <BroadcastPreview />
+                <BroadcastPreview/>
             </div>
             <CardHeader
                 title={name}
                 subheader={
                     debug
-                        ? <>
-                        {peerState} ({ion.ready ? 'ready' : 'not ready'} - pub: {ion.publisherSignalingState} sub: {ion.subscriberSignalingState})
-                        </>
+                        ? statusInfo
                         : null
                 }
             />
             <Button color="primary" onClick={doPublish}>Publish Webcam</Button>
             {streamIds.length || "No"} remote streams
-            {streamIds.length ? <hr /> : null}
+            {streamIds.length ? <hr/> : null}
             {streamIds.map((id) => {
                 const stream = remoteStreams[id];
                 const name = peerStreams[id];
@@ -101,7 +105,7 @@ const ShowTrack = ({stream, name, debug}) => {
                 {name} {debug ? `- Stream ${stream.id}` : null}
             </h6>
             <div style={{height: 90, width: 160, position: 'relative'}}>
-            <VideoView stream={stream} />
+                <VideoView stream={stream}/>
             </div>
         </>
     );

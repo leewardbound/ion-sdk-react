@@ -37,4 +37,4 @@ export const OnePeer = PeerTemplate.bind({});
 OnePeer.args = { debug: true };
 
 export const BuddyTest = PeerTemplate.bind({});
-BuddyTest.args = { debug: true, count: 4 };
+BuddyTest.args = { debug: true, count: 2 };

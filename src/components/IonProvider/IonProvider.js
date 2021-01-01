@@ -1,40 +1,48 @@
 import React from 'react'
-import {Client, IonSFUJSONRPCSignal} from 'ion-sdk-js'
-import {IonContext, useIon, useUserMedia} from '../../contexts'
 
-export function IonConnectionStatus() {
-    const {connectionState, signalingState, address} = useIon()
+import {Client} from 'ion-sdk-js'
+import {IonSFUJSONRPCSignal} from 'ion-sdk-js/lib/signal/json-rpc-impl';
 
-    return (
-        <div>
-            {address || 'Ion'} Status:{' '}
-            {connectionState && signalingState
-                ? `${connectionState}, ${signalingState}`
-                : 'unknown!'}
-        </div>
-    )
-}
 
-export default function IonProvider({children, debug}) {
-    const [ion, setIon] = React.useState({
-        client: null,
-        room: null,
-        address: null,
-        signal: null,
-    })
+import {IonContext, useUserMedia} from '../../contexts'
 
-    const {constraints, setConstraints, localStream} = useUserMedia();
+export default function IonProvider({children, ...props}) {
+    const [sid, setSid] = React.useState(props.sid)
+    const [status, setStatus] = React.useState()
+    const [signal, setSignal] = React.useState(props.signal ? props.signal : new IonSFUJSONRPCSignal(props.address || "ws://localhost:7000/ws"))
+    const [config, setConfig] = React.useState(props.config)
+    const [client, setClient] = React.useState()
 
-    const pub = ion.client?.transports[0]
-    const sub = ion.client?.transports[1]
+    const {localStream} = useUserMedia();
+
+    const hasTransports = Object.keys(client?.transports || {}).length === 2
+    const pub = hasTransports ? client.transports[0] : null
+    const sub = hasTransports ? client.transports[1] : null
+
     const publisherConnectionState = pub?.pc?.connectionState
     const subscriberConnectionState = sub?.pc?.connectionState
     const publisherSignalingState = pub?.pc?.signalingState
     const subscriberSignalingState = sub?.pc?.signalingState
 
     React.useEffect(() => {
-        setIon(function (_old) {
-            const newState = ({..._old, publisherConnectionState, publisherSignalingState, subscriberConnectionState, subscriberSignalingState})
+        if (!signal) return
+        let _client = new Client(signal, config)
+
+        setClient(_client)
+    }, [signal,])
+
+    React.useEffect(updateStatus,
+        [publisherSignalingState, publisherSignalingState, subscriberConnectionState, subscriberSignalingState])
+
+    function updateStatus() {
+        setStatus(function (_old) {
+            const newState = ({
+                ..._old,
+                publisherConnectionState,
+                publisherSignalingState,
+                subscriberConnectionState,
+                subscriberSignalingState
+            })
 
             newState.publisherConnectionReady = (publisherConnectionState === 'new' || publisherConnectionState === 'connected')
             newState.publisherSignalingReady = publisherSignalingState === 'stable'
@@ -48,48 +56,62 @@ export default function IonProvider({children, debug}) {
             newState.signalingReady = newState.publisherSignalingReady && newState.subscriberSignalingReady
             newState.ready = newState.publisherReady && newState.subscriberReady
 
+            console.log("SetStatus")
             return newState
-        })
-    }, [publisherConnectionState, subscriberConnectionState, publisherSignalingState, subscriberSignalingState])
-
-    function join({signal, room, address, onTrack}) {
-        if (!room) return
-        if (ion.client) {
-            ion.client.close()
-        }
-        let joinRoom = room || ion.room
-        const client = new Client(
-            joinRoom,
-            signal ||
-            new IonSFUJSONRPCSignal(address || 'ws://localhost:7000/ws')
-        )
-        client.ontrack = onTrack
-
-        setIon({
-            room: joinRoom,
-            address,
-            client,
-            signal,
         })
     }
 
+
+    async function join(join_sid, onTrack) {
+        if (!join_sid) return
+        if (!signal) {
+            throw new Error("Cannot call join before signal is set")
+        }
+        leave()
+
+        if (onTrack)
+            client.ontrack = onTrack
+
+        signal.onopen = () => {
+            console.info("joining...",join_sid)
+            client.join(join_sid)
+        }
+
+        setSid(join_sid)
+
+        setInterval(updateStatus, 2500)
+    }
+
     async function publishUserMedia() {
-        ion.client.publish(localStream)
+        client.publish(localStream)
         return localStream
     }
 
     function leave() {
-        if (ion.client) {
-            ion.client.close()
+        if (sid) {
+            console.info("Ion Close")
+            client.close()
         }
     }
 
-    React.useEffect(() => leave, [])
+    React.useEffect(() => {
+        leave()
+    }, [])
 
     return (
-        <IonContext.Provider value={{...ion, join, leave, publishUserMedia}}>
+        <IonContext.Provider
+            value={{
+                client,
+                sid,
+                join,
+                leave,
+                publishUserMedia,
+                status,
+                setClient,
+                setSignal,
+                setConfig
+            }}>
             {children}
-            {debug === true ? <IonConnectionStatus/> : debug}
         </IonContext.Provider>
     )
 }
